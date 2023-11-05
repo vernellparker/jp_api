@@ -1,3 +1,5 @@
+Quick Correction: The Github repo says two contributors, however it's just me. I accidentally was logged in under my other user account when I updated the code.
+
 Hello thanks so much for taking the time to review this project. Setting up the project should be as simple as running go mod tidy and then connecting a database.
 Currently the project is set up to postgres and I decided to use that flavor of sql as it was apart of the job description. When the application starts, the application will
 automatically create the tables needed if they do not exist. I did this to aid in the submission process so that you wouldn't have to do it manually.  If you would like to preload some dinosaurs into the database
