@@ -1,4 +1,3 @@
-
 Hello thanks so much for taking the time to review this project. Setting up the project should be as simple as running go mod tidy and then connecting a database.
 Currently the project is set up to postgres and I decided to use that flavor of sql as it was apart of the job description. When the application starts, the application will
 automatically create the tables needed if they do not exist. I did this to aid in the submission process so that you wouldn't have to do it manually.  If you would like to preload some dinosaurs into the database
@@ -13,10 +12,91 @@ All of the the primary business requirements should be working and several of th
 • Dinosaurs cannot be moved into a cage that is powered down
 
 Also I've added additional logic to the application that I believe would make sense in this situation as will. Much of that logic would be verification checks, for example the application won't allow you to create
-a cage with dinosaurs that don't exist in the database. That is another reason a add the preload endpoint.
+a cage with dinosaurs that don't exist in the database. That is another reason a add the preload endpoint. I also used dependency injection within the application so if your familiar with Uber.FX, I think you'll feel right at home.
+
+Routes:
+    GET "/api/cage", CageController.GetAllCages
+    GET "/api/cage/:id"  CageController.GetOneCage
+	POST "/api/cage"   CageController.CreateCage
+	PATCH "/api/cage/:id" CageController.UpdateCage
+
+    GET "/api/dino/preload" DinosaurController.PreloadDinosaurs
+    GET "/api/dino" DinosaurController.GetAllDinosaurs
+	GET "/api/dino/:id" DinosaurController.GetOneDinosaur
+	POST "/api/dino" DinosaurController.CreateDinosaur
+	PATCH "/api/dino/:id" DinosaurController.UpdateDinosaur
 
 In a production or concurrent environment, I would definitely do some refactoring to make methods cleaner and also so clean up some of the database logic as well. I used the db
 to do some extra things such as working with the current_occupancy of the cages, where I used postgres to do those calculations, I would more then like do more of that to help to take some
 responsibly off of the software. Small things such as that can aid in performance when done correctly.
 
 If you have any questions just let me know.
+
+Payload Scenarios:
+
+Move Dino:
+    PATCH Endpoint: http://localhost:8080/api/dino/6
+    {
+
+        "cage_id":3
+
+    }
+
+Create Dino:
+    POST Endpoint: http://localhost:8080/api/cage
+{
+
+        "name": "Test",
+        "species": "Tyrannosaurus",
+        "species_type": "Carnivore",
+        "cage_id":3
+
+}
+
+Edit Dino:
+    PATCH Endpoint: http://localhost:8080/api/dino/6
+{
+
+        "name": "Test",
+        "species": "Tyrannosaurus",
+        "species_type": "Carnivore",
+        "cage_id":3
+
+}
+
+Edit Dino:
+    PATCH Endpoint: http://localhost:8080/api/dino/6
+{
+
+        "name": "Test",
+        "species": "Tyrannosaurus",
+        "species_type": "Carnivore",
+        "cage_id":3
+
+}
+
+Edit Cage:
+    PATCH Endpoint: http://localhost:8080/api/cage/4
+{
+
+    "capacity": 4,
+    "power": "ACTIVE",
+    "species": [
+        "Velociraptor"
+    ],
+    "species_type": "Carnivore",
+    "dinosaurs": [1]
+}
+
+Create Cage:
+    POST Endpoint: http://localhost:8080/api/cage
+{
+
+    "capacity": 4,
+    "power": "ACTIVE",
+    "species": [
+        "Velociraptor"
+    ],
+    "species_type": "Carnivore",
+    "dinosaurs": []
+}

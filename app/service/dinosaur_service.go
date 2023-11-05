@@ -3,6 +3,7 @@ package service
 import (
 	"JurrassicParkAPI/app/repository"
 	"JurrassicParkAPI/model"
+	"golang.org/x/exp/slices"
 )
 
 type DinosaurService struct {
@@ -43,10 +44,19 @@ func (d *DinosaurService) UpdateDinosaur(dinosaur model.Dinosaur) (int, error) {
 		c := model.CageDAO{}
 		c.CageID = dinosaur.CageID
 		c.Dinosaurs = append(c.Dinosaurs, int64(dinosaur.DinoID))
-		_, err = d.cageRepository.UpdateCage(c)
+
+		cage, err := d.cageRepository.GetOneCage(*c.CageID)
 		if err != nil {
 			return 0, err
 		}
+		if !slices.Contains(c.Dinosaurs, cage.Dinosaurs[0]) {
+			c.Dinosaurs = append(c.Dinosaurs, cage.Dinosaurs...)
+			_, err = d.cageRepository.UpdateCage(c)
+			if err != nil {
+				return 0, err
+			}
+		}
+
 	}
 	return updateDinosaur, err
 }
